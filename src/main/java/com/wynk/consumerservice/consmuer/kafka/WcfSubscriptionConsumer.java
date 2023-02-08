@@ -19,8 +19,8 @@ public class WcfSubscriptionConsumer {
     @Autowired
     private RestService restService;
 
-    @KafkaListener(topics = "${kafka.topic}",
-            group = "${group.wcf.subscription}",
+    @KafkaListener(topics = "${kafka.topic.wcf.subscriptions}",
+            groupId = "${group.wcf.subscriptions}",
             containerFactory = "createKafkaListenerContainerFactory")
     public void listen(ConsumerRecord<?, ?> record) {
         try {

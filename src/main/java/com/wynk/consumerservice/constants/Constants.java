@@ -8,7 +8,7 @@ public class Constants {
 
     public static final String BOOTSTRAP_SERVERS_CONFIG = "kafka.producer.bootstrap.servers";
 
-    public static final String GROUP_ID_CONFIG = "group.id";
+    public static final String GROUP_ID_CONFIG = "group.wcf.subscriptions";
 
     public static final String AUTO_OFFSET_RESET_CONFIG = "auto.offset.reset";
 
