@@ -23,4 +23,7 @@ public class Constants {
 
     public static final String SESSION_TIMEOUT_MS_CONFIG = "session.timeout.ms";
 
+    public static final String X_BSY_ATKN_KEY = "x-bsy-atkn";
+    public static final String X_BSY_DATE_KEY = "x-bsy-date";
+
 }

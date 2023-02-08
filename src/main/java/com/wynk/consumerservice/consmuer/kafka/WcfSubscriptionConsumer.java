@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Component;
 
 /**
  * @author : Kunal Sharma
@@ -14,6 +15,7 @@ import org.springframework.kafka.annotation.KafkaListener;
  **/
 
 @Slf4j
+@Component
 public class WcfSubscriptionConsumer {
 
     @Autowired
@@ -23,17 +25,20 @@ public class WcfSubscriptionConsumer {
             groupId = "${group.wcf.subscriptions}",
             containerFactory = "createKafkaListenerContainerFactory")
     public void listen(ConsumerRecord<?, ?> record) {
+        log.info("****************** START *************************");
         try {
 
             log.info("Received message on consumer kafka topic is = '{}'", record);
                 SubscriptionEvent subscriptionEvent =
                     AppUtils.fromJson(record.value().toString(), SubscriptionEvent.class);
 
-            restService.processRecord(record.value().toString());
+            restService.processRecord(subscriptionEvent,  record.value().toString());
             log.info("Event in payload is {}", subscriptionEvent) ;
         }catch(Exception e) {
             log.error("Error occur while consuming {},{}",e.getMessage(),e);
         }
+
+        log.info("****************** END *************************");
     }
 
 }
