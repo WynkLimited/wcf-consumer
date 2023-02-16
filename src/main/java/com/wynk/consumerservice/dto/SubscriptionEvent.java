@@ -1,6 +1,7 @@
 package com.wynk.consumerservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Data;
 
 /**
  * @author : Kunal Sharma
@@ -8,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  **/
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Data
 public class SubscriptionEvent {
 
     private String uid;

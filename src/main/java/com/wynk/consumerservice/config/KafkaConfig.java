@@ -7,8 +7,10 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.kafka.ConcurrentKafkaListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -21,6 +23,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author : Kunal Sharma
@@ -39,8 +43,8 @@ public class KafkaConfig {
     @Value("${kafka.multi.thread.concurrency}")
     private Integer multiThreadConcurrency;
 
-    @Bean
-    KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> createKafkaListenerContainerFactory() {
+    @Bean(name ="kafkaListenerContainerFactory")
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> createKafkaListenerContainerFactory() {
         long start = System.currentTimeMillis();
         log.info("Initialising kafka consumer container factory");
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
@@ -92,13 +96,10 @@ public class KafkaConfig {
 
     private List<String> getServersAsList(String serverStr) {
         String[] serverArr = serverStr.split(",");
-        List<String> list = new ArrayList<>();
-        for (String str : serverArr) {
-            str = str.trim();
-            if (StringUtils.isNotBlank(str)) {
-                list.add(str);
-            }
-        }
+        List<String> list = Stream.of(serverArr)
+                .map(String::trim)
+                .filter(StringUtils::isNotBlank)
+                .collect(Collectors.toList());
         if (list.size() == 0) {
             log.error("No Kafka servers listed");
         }

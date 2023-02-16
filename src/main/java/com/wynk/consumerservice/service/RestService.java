@@ -5,16 +5,14 @@ import com.wynk.consumerservice.dto.SubscriptionEvent;
 import com.wynk.consumerservice.proxy.HttpProxy;
 import com.wynk.consumerservice.utils.AppUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.net.URI;
 import java.security.SignatureException;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,21 +35,26 @@ public class RestService {
     @Autowired
     private HttpProxy proxy;
 
+    @Value("${sapi.wcf.domain}")
+    private String sapiWcfDomain;
+
+    @Value("${secretKey}")
+    private String secretKey;
+
+    @Value("${appKey}")
+    private String appKey;
+
 
     public static final String TP_CALLBACK_ENDPOINT  = "/music/wcf/cb/subscribe/tp/callback";
-//    public static final String SAPI_WCF_DOMAIN  = "http://sapi.wynkinternal.in"; // need to given by sumit before prod
-    public static final String SAPI_WCF_DOMAIN  = "http://sapi-thanks.wynkinternal.in"; // need to given by sumit before prod
     public void processRecord(SubscriptionEvent subEvent, String jsonPayload) {
-        if(Objects.isNull(jsonPayload) || Objects.isNull(subEvent))
-        {
+        if (Objects.isNull(jsonPayload) || Objects.isNull(subEvent)) {
             return;
         }
         log.info("Going to hit sapi with payload {} ", jsonPayload);
-        try
-        {
-        StringBuilder url = new StringBuilder(SAPI_WCF_DOMAIN);
-        url.append(TP_CALLBACK_ENDPOINT);
-        log.info("Final Url is {}", url);
+        try {
+            StringBuilder url = new StringBuilder(sapiWcfDomain);
+            url.append(TP_CALLBACK_ENDPOINT);
+            log.info("Final Url is {}", url);
             Map<String, String> headerMap = getHeaderMap("POST", TP_CALLBACK_ENDPOINT, AppUtils.toJson(subEvent));
             log.info("Header map is {}", headerMap);
             log.info("Going to hit to sapi...");
@@ -59,18 +62,18 @@ public class RestService {
             String response = proxy.postData(url.toString(), AppUtils.toJson(subEvent), headerMap, 2000);
             log.info("Response received is : {}", response);
         } catch (Exception e) {
-            log.info("Some exception occur {}, {}", e.getMessage(),e);
+            log.info("Some exception occur {}, {}", e.getMessage(), e);
         }
-       // logic need to add here to hit api
+        // logic need to add here to hit api
     }
 
     public Map<String,String> getHeaderMap(String httpMethod , String requestUri, String requestBody){
         Map<String,String> headerMap = new HashMap();
         String timestamp = String.valueOf(System.currentTimeMillis());
-        requestBody = org.apache.commons.lang3.StringUtils.isBlank(requestBody) ? "" : requestBody;
-        String signature = createSignature(httpMethod,requestUri,requestBody,timestamp, "50de5a601c133a29c8db434fa9bf2db4");
+        requestBody = StringUtils.isBlank(requestBody) ? "" : requestBody;
+        String signature = createSignature(httpMethod,requestUri,requestBody,timestamp, secretKey);
         headerMap.put(Constants.X_BSY_DATE_KEY,timestamp);
-        headerMap.put(Constants.X_BSY_ATKN_KEY, "543fbd6f96644406567079c00d8f33dc".concat(":").concat(signature));
+        headerMap.put(Constants.X_BSY_ATKN_KEY, appKey.concat(":").concat(signature));
         headerMap.put("Content-Type", "application/json");
         return headerMap;
     }
@@ -101,10 +104,4 @@ public class RestService {
         return result;
     }
 }
-// Staging
-//    appId:
-//    secret:
 
-// Prod
-//    appId: 897944454aaa91bc373542fd9777ee8a
-//    secret: ce59d0f3b87c83224b74478672c43349
