@@ -1,10 +1,8 @@
 package com.wynk.consumerservice.service;
 
 import com.github.annotation.analytic.core.annotations.AnalyseTransaction;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.wynk.consumerservice.constants.MusicConstants;
-import com.wynk.consumerservice.dto.MoEngageEvent;
 import com.wynk.consumerservice.dto.MoEngageEventRequest;
 import com.wynk.consumerservice.exception.BaseLoggingMarkers;
 import com.wynk.consumerservice.utils.AppUtils;
