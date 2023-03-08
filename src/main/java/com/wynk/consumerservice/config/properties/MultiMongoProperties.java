@@ -20,7 +20,6 @@ public class MultiMongoProperties {
     private int maxIdleTimeMs;
     private String readPreference;
     private String replicaSet;
-    private boolean enabled;
     private MongoDataSource source;
 
     @Data
