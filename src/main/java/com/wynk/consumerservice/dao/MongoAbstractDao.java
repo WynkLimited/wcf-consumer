@@ -1,5 +1,7 @@
 package com.wynk.consumerservice.dao;
 
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import com.wynk.consumerservice.entity.BaseEntity;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
@@ -140,7 +142,7 @@ public abstract class MongoAbstractDao<T extends BaseEntity> implements MongoBas
   public List<T> findAll(Integer page) {
     if (!ObjectUtils.isEmpty(page) && page >= 0) {
       return mongoTemplate.find(
-          new Query().limit(findAllLimit()).with(new PageRequest(page, findAllLimit())),
+          new Query().limit(findAllLimit()).with(PageRequest.of(page, findAllLimit())),
           getEntityClass());
     }
     if (page == -1) // return all
@@ -163,16 +165,16 @@ public abstract class MongoAbstractDao<T extends BaseEntity> implements MongoBas
     query.limit(limit);
 
     if (!ObjectUtils.isEmpty(page) && page >= 0)
-      query.with(new PageRequest(page, limit));
+      query.with(PageRequest.of(page, limit));
 
     return mongoTemplate.find(query, getEntityClass());
   }
 
   @Override
   public boolean remove(String id) {
-    WriteResult result =
+    DeleteResult result =
         mongoTemplate.remove(new Query(Criteria.where("id").is(id)), getEntityClass());
-    if (result.getN() != 0) return true;
+    if (result.getDeletedCount() != 0) return true;
     return false;
   }
 
@@ -202,7 +204,9 @@ public abstract class MongoAbstractDao<T extends BaseEntity> implements MongoBas
     for (String key : params.keySet()) {
       update.set(key, params.get(key));
     }
-   return mongoTemplate.updateFirst(new Query(Criteria.where(idKey).is(id)), update, getEntityClass()).isUpdateOfExisting();
+    UpdateResult result = mongoTemplate.updateFirst(new Query(Criteria.where(idKey).is(id)), update, getEntityClass());
+    return result.wasAcknowledged();
+
   }
 
   public void addToSet(List<String> ids, Map<String, Object> params) {

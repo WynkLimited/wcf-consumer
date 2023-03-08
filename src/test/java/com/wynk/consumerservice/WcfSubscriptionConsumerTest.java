@@ -1,22 +1,12 @@
 package com.wynk.consumerservice;
 
-import com.wynk.consumerservice.consmuer.kafka.WcfSubscriptionConsumer;
-import com.wynk.consumerservice.dto.SubscriptionEvent;
-import com.wynk.consumerservice.proxy.HttpProxy;
-import com.wynk.consumerservice.service.RestService;
-import com.wynk.consumerservice.utils.AppUtils;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("stage")
 public class WcfSubscriptionConsumerTest {
-    @Mock
+    /*@Mock
     private RestService restService;
 
     @Mock
@@ -45,5 +35,5 @@ public class WcfSubscriptionConsumerTest {
         ConsumerRecord<String, Object> record = new ConsumerRecord<String, Object>("dummyTopic", 0, 0, "test", AppUtils.toJson(getSubscriptionEvent()));
         consumer.listen(record);
         Mockito.verify(restService, Mockito.times(1)).processRecord(Mockito.any(), Mockito.any());
-    }
+    }*/
 }

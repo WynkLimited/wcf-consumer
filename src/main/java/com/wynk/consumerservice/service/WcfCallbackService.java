@@ -72,7 +72,7 @@ public class WcfCallbackService {
         sendEventsToMoEngage(subscriptionEvent, user);
 
         //refresh subscription data
-        refreshSubsData(subscriptionEvent, user);
+        //refreshSubsData(subscriptionEvent, user);
 
         Map<String, Object> paramValues = WcfUtils.getFupResetParameterMap(subscriptionEvent.getValidTillDate());
         NewWCFSubscription userSubscription = null;
@@ -88,7 +88,7 @@ public class WcfCallbackService {
             userSubscription = wcfUtils.getUpdatedSubscriptionObject(user,subscriptionEvent);
         }
         paramValues.put(User.MongoUserEntityKey.newSubscription, AppUtils.gson.toJsonTree(userSubscription));
-        accountService.updateSubscriptionForUserId(subscriptionEvent.getUid(), paramValues,Boolean.TRUE,userSubscription);
+        userService.updateUser(uid, paramValues);
 
         try {
             htApiService.autoActivateHellotunes(user.getUid());
@@ -122,7 +122,7 @@ public class WcfCallbackService {
         }
     }
 
-    private void refreshSubsData(SubscriptionEvent subscriptionEvent, User user) {
+    /*private void refreshSubsData(SubscriptionEvent subscriptionEvent, User user) {
         try {
             String deviceId = "";
             String appVersion = "";
@@ -166,5 +166,5 @@ public class WcfCallbackService {
             logger.error("Error while refreshing subscription data for uid : {}", uid);
             LogstashLoggerUtils.createAccessLogLite("SubsRefreshError", e.getMessage(), uid);
         }
-    }
+    }*/
 }

@@ -1,12 +1,11 @@
 package com.wynk.consumerservice.consmuer.kafka;
 
 import com.wynk.consumerservice.dto.SubscriptionEvent;
-import com.wynk.consumerservice.service.RestService;
+import com.wynk.consumerservice.service.WcfCallbackService;
 import com.wynk.consumerservice.utils.AppUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +19,7 @@ import org.springframework.stereotype.Component;
 public class WcfSubscriptionConsumer {
 
     @Autowired
-    private RestService restService;
+    private WcfCallbackService wcfCallbackService;
 
     @KafkaListener(topics = "${kafka.topic.wcf.subscriptions}",
             groupId = "${group.wcf.subscriptions}",
@@ -33,7 +32,7 @@ public class WcfSubscriptionConsumer {
                 SubscriptionEvent subscriptionEvent =
                     AppUtils.fromJson(record.value().toString(), SubscriptionEvent.class);
 
-            restService.processRecord(subscriptionEvent,  record.value().toString());
+                wcfCallbackService.handleCallback(subscriptionEvent);
             log.info("Event in payload is {}", subscriptionEvent) ;
         }catch(Exception e) {
             log.error("Error occur while consuming {},{}",e.getMessage(),e);

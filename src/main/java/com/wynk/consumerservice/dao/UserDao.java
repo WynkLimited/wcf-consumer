@@ -12,6 +12,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 
+import java.util.Map;
+
 @Repository
 public class UserDao extends MongoAbstractDao<User> {
 
@@ -48,6 +50,11 @@ public class UserDao extends MongoAbstractDao<User> {
     }
     return user;
   }
+    public void updateUser(String uid, Map<String, Object> params) {
+
+        super.update("uid",uid,params);
+        //flushCache(uid);
+    }
   /*
 
   @WynkCacheable(source = CacheSource.REDIS,
@@ -78,21 +85,7 @@ public class UserDao extends MongoAbstractDao<User> {
   }
 
 
-  @TimeIt
-  public User updateUser(User user) {
-    if (user == null) {
-      throw new WynkRuntimeException(WynkErrorType.MUS001);
-    }
-    User returnUser = insert(user);
-    flushCache(user.uid);
-    return returnUser;
-  }
 
-  public void updateUser(String uid, Map<String, Object> params) {
-
-    super.update("uid",uid,params);
-    flushCache(uid);
-  }
 
 
 *//*
