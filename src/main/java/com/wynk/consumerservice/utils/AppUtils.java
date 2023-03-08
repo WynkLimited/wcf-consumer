@@ -1,5 +1,7 @@
 package com.wynk.consumerservice.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
 /**
@@ -9,7 +11,9 @@ import com.google.gson.Gson;
 public class AppUtils {
 
 
-    private static Gson gson = new Gson();
+    public static Gson gson = new Gson();
+
+    public static ObjectMapper mapper = new ObjectMapper();
 
 
     public static <T> T fromJson(String json, Class<T> className) {
@@ -18,5 +22,14 @@ public class AppUtils {
 
     public static String toJson(Object object) {
         return gson.toJson(object);
+    }
+
+    public static String writeValueAsString(Object object) {
+        try {
+            return mapper.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            //
+            return object.toString();
+        }
     }
 }

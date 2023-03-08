@@ -1,12 +1,14 @@
 package com.wynk.consumerservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class MoengageEventRequest {
+@Builder
+public class MoEngageEventRequest {
 
     @JsonProperty("customer_id")
     private String uid;
@@ -15,5 +17,5 @@ public class MoengageEventRequest {
     private String type;
 
     @JsonProperty("actions")
-    private List<MoengageEvent> eventList;
+    private List<MoEngageEvent> eventList;
 }

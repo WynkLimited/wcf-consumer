@@ -20,5 +20,7 @@ public class SubscriptionEvent {
     private Long validTillDate;
     private Boolean active;
     private Boolean autoRenewal;
+    private String service;
+    private String referenceId;
 
 }

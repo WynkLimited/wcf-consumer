@@ -1,6 +1,6 @@
 package com.wynk.consumerservice.constants;
 
-public enum MoengageEventNames {
+public enum MoEngageEventNames {
     PackPurchased,
     PackRenewed
 }

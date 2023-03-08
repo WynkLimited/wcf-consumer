@@ -1,15 +1,36 @@
 package com.wynk.consumerservice.service;
 
+import com.wynk.consumerservice.constants.MoEngageEventAttributes;
+import com.wynk.consumerservice.constants.MoEngageEventNames;
+import com.wynk.consumerservice.dto.MoEngageEvent;
+import com.wynk.consumerservice.dto.MoEngageEventRequest;
+import com.wynk.consumerservice.entity.Product;
+import com.wynk.consumerservice.entity.User;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
-public class MoengageServive {
+@Service
+@Slf4j
+public class MoEngageService {
 
-    private void sendEventToMoEngage(User user, String eventName, String purchasedPack) {
+    @Autowired
+    private MoEngageEventService moEngageEventService;
+
+    @Autowired
+    private WcfCachingService wcfCachingService;
+
+    public void sendEventToMoEngage(User user, String eventName, String purchasedPack) {
         Map<String, String> attributes = createAttributes(user, purchasedPack, eventName);
         MoEngageEvent moEvent = createEvent(eventName, attributes);
         List<MoEngageEvent> eventsList = new ArrayList<>();
@@ -25,8 +46,8 @@ public class MoengageServive {
         attributes.put(MoEngageEventAttributes.Msisdn.name(), user.getMsisdn());
         attributes.put(MoEngageEventAttributes.Timestamp.name(), simpleDateFormat.format(date));
         if (eventName.equalsIgnoreCase(MoEngageEventNames.PackPurchased.name())) {
-            UserSubscription.ProductMeta userLatestSubscription =
-                    user.getUserSubscription().getProdIds().get(indexOfLatestOffer(user));
+            Product userLatestSubscription =
+                    user.getNewSubscription().getProdIds().get(indexOfLatestOffer(user));
             attributes.put(
                     MoEngageEventAttributes.OldPlanID.name(),
                     String.valueOf(userLatestSubscription.getPlanId()));
@@ -37,17 +58,28 @@ public class MoengageServive {
         return attributes;
     }
 
+    private int indexOfLatestOffer(User user) {
+        List<Integer> listOfHierarchy =
+                user.getNewSubscription().getProdIds().stream()
+                        .map(
+                                i -> Objects.requireNonNull(wcfCachingService.getOffer(i.getOfferId())).getHierarchy())
+                        .collect(Collectors.toList());
+        int max = Collections.max(listOfHierarchy);
+        return listOfHierarchy.indexOf(max);
+    }
+
+
     private MoEngageEvent createEvent(String eventName, Map<String, String> attributes) {
-        return new MoEngageEvent(eventName, attributes);
+        return MoEngageEvent.builder().eventName(eventName).attributes(attributes).build();
     }
 
     private void pushEventsToMoEngage(String uid, List<MoEngageEvent> eventsList) {
-        MoEngageEventRequest moEngageEventRequest =
-                new MoEngageEventRequest(uid, eventsList);
+        MoEngageEventRequest moEngageEventRequest = MoEngageEventRequest.builder().uid(uid).eventList(eventsList).type("event").build();
+
         try {
             moEngageEventService.sendEvent(moEngageEventRequest);
         } catch (Exception e) {
-            logger.error("Error sending HT Event to MoEngage for user " + uid);
+            log.error("Error sending HT Event to MoEngage for user " + uid);
         }
     }
 }
