@@ -1,18 +1,24 @@
 package com.wynk.consumerservice.service;
 
+import com.google.gson.reflect.TypeToken;
 import com.wynk.consumerservice.annotation.TimeIt;
 import com.wynk.consumerservice.dto.AllOffersResponse;
 import com.wynk.consumerservice.dto.AllPlansResponse;
 import com.wynk.consumerservice.dto.AllProductsResponse;
+import com.wynk.consumerservice.dto.ResponseData;
 import com.wynk.consumerservice.dto.SubscriptionStatusResponse;
 import com.wynk.consumerservice.utils.WcfUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
@@ -48,11 +54,11 @@ public class WcfApiService {
     @TimeIt
     public SubscriptionStatusResponse getSubscriptionStatus(String uid) {
         String url = String.format(WCF_SUBS_STATUS_ENDPOINT, wcfBaseUrl, uid);
-        Map<String, String> headerMap = WcfUtils.getHeaderMap(METHOD_GET,
+        HttpHeaders headers = WcfUtils.getHeaders(METHOD_GET,
                 String.format(WCF_SUBS_STATUS_ENDPOINT, "", uid), null, wcfApiAppId, wcfApiSecretKey);
         long startTime = System.currentTimeMillis();
-        log.info("WCF subscriptionStatus Url : {} with header : {}", url, headerMap);
-        HttpEntity<?> httpEntity = new HttpEntity<>(headerMap);
+        log.info("WCF subscriptionStatus Url : {} with header : {}", url, headers);
+        HttpEntity<?> httpEntity = new HttpEntity<>(headers);
         ResponseEntity<SubscriptionStatusResponse> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, SubscriptionStatusResponse.class);
         log.debug("WCF subscriptionStatus response Data  : {}", response);
         return response.getBody();
@@ -61,40 +67,42 @@ public class WcfApiService {
     @TimeIt
     public AllPlansResponse getAllPlansResponse() {
         String url = String.format(wcfAllPlansUrl, wcfBaseUrl);
-        Map<String, String> headerMap =
-                WcfUtils.getHeaderMap(
+        HttpHeaders headers =
+                WcfUtils.getHeaders(
                         METHOD_GET, String.format(wcfAllPlansUrl, ""), null, wcfApiAppId, wcfApiSecretKey);
         long startTime = System.currentTimeMillis();
         log.info("All plans Request Url : {}", url);
-        HttpEntity<?> httpEntity = new HttpEntity<>(headerMap);
-        ResponseEntity<AllPlansResponse> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, AllPlansResponse.class);
+        HttpEntity<?> httpEntity = new HttpEntity<>(headers);
+        ResponseEntity<ResponseData<AllPlansResponse>> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, new ParameterizedTypeReference<ResponseData<AllPlansResponse>>(){});
         log.info("All plans Response : {}", response);
-        return response.getBody();
+        return response.getBody().getData();
     }
 
     @TimeIt
     public AllProductsResponse getAllProductsResponse() {
         String url = String.format(wcfAllProductsUrl, wcfBaseUrl);
-        Map<String, String> headerMap =
-                WcfUtils.getHeaderMap(
+        HttpHeaders headers =
+                WcfUtils.getHeaders(
                         METHOD_GET, String.format(wcfAllProductsUrl, ""), null, wcfApiAppId, wcfApiSecretKey);
         log.info("All products Request Url : {}", url);
-        HttpEntity<?> httpEntity = new HttpEntity<>(headerMap);
-        ResponseEntity<AllProductsResponse> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, AllProductsResponse.class);
+        HttpEntity<?> httpEntity = new HttpEntity<>(headers);
+        ResponseEntity<ResponseData<AllProductsResponse>> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, new ParameterizedTypeReference<ResponseData<AllProductsResponse>>(){});
         log.info("All products Response : {}", response);
-        return response.getBody();
+        return response.getBody().getData();
     }
 
     @TimeIt
     public AllOffersResponse getAllOffersResponse() {
         String url = String.format(wcfAllOffersUrl, wcfBaseUrl);
-        Map<String, String> headerMap =
-                WcfUtils.getHeaderMap(
+        HttpHeaders headerMap =
+                WcfUtils.getHeaders(
                         METHOD_GET, String.format(wcfAllOffersUrl, ""), null, wcfApiAppId, wcfApiSecretKey);
+
+
         log.info("All products Request Url : {}", url);
         HttpEntity<?> httpEntity = new HttpEntity<>(headerMap);
-        ResponseEntity<AllOffersResponse> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, AllOffersResponse.class);
+        ResponseEntity<ResponseData<AllOffersResponse>> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, new ParameterizedTypeReference<ResponseData<AllOffersResponse>>(){});
         log.info("All offers Response  : {}", response);
-        return response.getBody();
+        return response.getBody().getData();
     }
 }

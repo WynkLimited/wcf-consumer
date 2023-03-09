@@ -46,8 +46,6 @@ public class MultiMongoProperties {
             if (authSource != null) {
                 builder.append("authSource=")
                         .append(authSource);
-            } else {
-                builder.append("authSource=");
             }
             return builder.toString();
         }

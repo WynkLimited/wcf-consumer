@@ -13,6 +13,7 @@ import com.wynk.consumerservice.service.WcfCachingService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -43,15 +44,15 @@ public class WcfUtils {
         return paramValues;
     }
 
-    public static Map<String,String> getHeaderMap(String httpMethod , String requestUri, String requestBody, String wcfApiAppId, String wcfApiSecretKey){
-        Map<String,String> headerMap = new HashMap();
+    public static HttpHeaders getHeaders(String httpMethod , String requestUri, String requestBody, String wcfApiAppId, String wcfApiSecretKey) {
+        HttpHeaders httpHeaders = new HttpHeaders();
         String timestamp = String.valueOf(System.currentTimeMillis());
         requestBody = StringUtils.isBlank(requestBody) ? "" : requestBody;
         String signature = createSignature(httpMethod,requestUri,requestBody,timestamp, wcfApiSecretKey);
-        headerMap.put(X_BSY_DATE_KEY,timestamp);
-        headerMap.put(X_BSY_ATKN_KEY, wcfApiAppId.concat(":").concat(signature));
-        headerMap.put("Content-Type", "application/json");
-        return headerMap;
+        httpHeaders.add(X_BSY_DATE_KEY,timestamp);
+        httpHeaders.add(X_BSY_ATKN_KEY, wcfApiAppId.concat(":").concat(signature));
+        httpHeaders.add("Content-Type", "application/json");
+        return httpHeaders;
     }
 
     public static String createSignature(String httpMethod , String requestUri, String requestBody, String timestamp, String secretKey){

@@ -7,15 +7,10 @@ import lombok.Setter;
 import java.util.List;
 import java.util.Map;
 
-@Getter
-@Setter
-public class AllProductsResponse extends ResponseData<AllProductsResponse> {
+@Data
+public class AllProductsResponse {
 
   List<Product> allProducts;
-
-  public AllProductsResponse(){
-    super(AllProductsResponse.class);
-  }
 
   @Data
   public static class Product {

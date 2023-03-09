@@ -4,6 +4,7 @@ import com.wynk.consumerservice.annotation.TimeIt;
 import com.wynk.consumerservice.entity.User;
 import com.wynk.consumerservice.exception.WynkErrorType;
 import com.wynk.consumerservice.exception.WynkRuntimeException;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Map;
 
 @Repository
+@NoArgsConstructor
 public class UserDao extends MongoAbstractDao<User> {
 
   private static final int USER_REDIS_TTL = 12 * 60;

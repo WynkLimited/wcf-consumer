@@ -1,16 +1,11 @@
 package com.wynk.consumerservice.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.List;
 
-@Getter
-@Setter
-public class AllPlansResponse extends ResponseData<AllPlansResponse> {
+@Data
+public class AllPlansResponse {
   List<PlanDTO> plans;
 
-  public AllPlansResponse() {
-    super(AllPlansResponse.class);
-  }
 }

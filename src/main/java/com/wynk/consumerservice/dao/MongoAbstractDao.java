@@ -3,6 +3,7 @@ package com.wynk.consumerservice.dao;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.wynk.consumerservice.entity.BaseEntity;
+import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@NoArgsConstructor
 public abstract class MongoAbstractDao<T extends BaseEntity> implements MongoBaseDao<T> {
 
   protected MongoTemplate mongoTemplate;

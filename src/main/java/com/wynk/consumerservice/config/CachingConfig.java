@@ -55,10 +55,6 @@ public class CachingConfig {
                 }
                 if (StringUtils.isNotBlank(redisPassword)) {
                     redisHostConfig.setRedisPassword(redisPassword);
-                    String redis_password = System.getenv("redis_password");
-                    if (StringUtils.isNotBlank(redis_password)) {
-                        redisHostConfig.setRedisPassword(redis_password);
-                    }
                 }
                 redisHosts.add(redisHostConfig);
             }
