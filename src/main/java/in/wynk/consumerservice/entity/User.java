@@ -83,7 +83,7 @@ public class User extends BaseEntity{
 
     @Field(MongoUserEntityKey.WynkBasicKeys.basicHasManuallySelectedLang)
     @JsonProperty(MongoUserEntityKey.WynkBasicKeys.basicHasManuallySelectedLang)
-    private boolean basicHasManuallySelectedLangauge = false;
+    private Boolean basicHasManuallySelectedLangauge = false;
 
     @Field(MongoUserEntityKey.fbToken)
     @JsonProperty(MongoUserEntityKey.fbToken)
@@ -145,18 +145,11 @@ public class User extends BaseEntity{
     @JsonProperty(MongoUserEntityKey.subscription)
     private WCFSubscription subscription;
 
-    public WCFSubscription getSubscription() {
-        return subscription;
-    }
-
     /** code for new WCF Subscription object */
     @Field(MongoUserEntityKey.newSubscription)
     @JsonProperty(MongoUserEntityKey.newSubscription)
     private NewWCFSubscription newSubscription;
 
-    public NewWCFSubscription getNewSubscription() {
-        return newSubscription;
-    }
 
     @Field(MongoUserEntityKey.WynkBasicKeys.basicContentLanguages)
     @JsonProperty(MongoUserEntityKey.WynkBasicKeys.basicContentLanguages)

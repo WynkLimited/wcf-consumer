@@ -1,0 +1,8 @@
+aws:
+  secretsmanager:
+    name: credentials
+    prefix: /whitelabel
+    enabled: true
+    region: ap-south-1
+    default-context: credentials
+    fail-fast: false

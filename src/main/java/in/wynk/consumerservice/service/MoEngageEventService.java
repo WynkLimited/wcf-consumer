@@ -41,10 +41,10 @@ public class MoEngageEventService {
 
     @AnalyseTransaction(name = "moengageEvent")
     public void sendEvent(MoEngageEventRequest moEngageEventRequest) {
-        JsonObject json = AppUtils.gson.toJsonTree(moEngageEventRequest).getAsJsonObject();
+        String requestJson = AppUtils.writeValueAsString(moEngageEventRequest);
         String res = "";
         try {
-            HttpEntity<?> httpEntity = new HttpEntity<>(json.toString(), getMoengageHeaders());
+            HttpEntity<?> httpEntity = new HttpEntity<>(requestJson, getMoengageHeaders());
             ResponseEntity<JsonObject> response = restTemplate.exchange(moengageEventUrl, HttpMethod.POST, httpEntity, JsonObject.class);
 
             JsonObject obj = response.getBody();

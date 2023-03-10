@@ -51,7 +51,6 @@ public class WcfApiService {
         String url = String.format(WCF_SUBS_STATUS_ENDPOINT, wcfBaseUrl, uid);
         HttpHeaders headers = WcfUtils.getHeaders(METHOD_GET,
                 String.format(WCF_SUBS_STATUS_ENDPOINT, "", uid), null, wcfApiAppId, wcfApiSecretKey);
-        long startTime = System.currentTimeMillis();
         log.info("WCF subscriptionStatus Url : {} with header : {}", url, headers);
         HttpEntity<?> httpEntity = new HttpEntity<>(headers);
         ResponseEntity<SubscriptionStatusResponse> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, SubscriptionStatusResponse.class);
