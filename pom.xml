@@ -27,6 +27,13 @@
 		<redis.client.version>3.1.0</redis.client.version>
 		<annotation.analytic.version>0.0.1</annotation.analytic.version>
 	</properties>
+	<repositories>
+		<repository>
+			<id>wcf-repo</id>
+			<name>WCF Nexus Repo</name>
+			<url>http://nexus.bsbportal.com/nexus/content/repositories/public</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
 		<dependency>
