@@ -22,5 +22,7 @@ public class SubscriptionEvent {
     private Boolean autoRenewal;
     private String service;
     private String referenceId;
+    private String telcoUnlimited;
+    private String preferredPartner;
 
 }

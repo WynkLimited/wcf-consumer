@@ -52,6 +52,7 @@ public class WcfCallbackService {
         log.info("Calback recieved for uid {}, event {}", subscriptionEvent.getUid(), subscriptionEvent.getEvent());
         AnalyticService.update("uid", subscriptionEvent.getUid());
         AnalyticService.update("event", subscriptionEvent.getEvent());
+        AnalyticService.update("referenceId", subscriptionEvent.getReferenceId());
         MDC.put("uid", subscriptionEvent.getUid());
 
         if(StringUtils.isAnyBlank(subscriptionEvent.getEvent(), subscriptionEvent.getUid())) {
