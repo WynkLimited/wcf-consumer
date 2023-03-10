@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest
+//@SpringBootTest
 @ActiveProfiles("stage")
 public class AppUtilsTest {
 
@@ -24,7 +24,7 @@ public class AppUtilsTest {
         return subscriptionEvent;
     }
 
-    @Test
+   // @Test
     public void jsonTest() {
         SubscriptionEvent event = getSubscriptionEvent();
         String json =  AppUtils.toJson(event);

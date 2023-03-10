@@ -27,7 +27,7 @@
 		<redis.client.version>3.1.0</redis.client.version>
 		<annotation.analytic.version>0.0.1</annotation.analytic.version>
 	</properties>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

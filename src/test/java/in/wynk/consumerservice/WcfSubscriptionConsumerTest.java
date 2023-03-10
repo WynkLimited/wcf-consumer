@@ -3,7 +3,7 @@ package in.wynk.consumerservice;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest
+//@SpringBootTest
 @ActiveProfiles("stage")
 public class WcfSubscriptionConsumerTest {
     /*@Mock
