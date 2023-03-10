@@ -79,7 +79,7 @@ public class MoEngageService {
         try {
             moEngageEventService.sendEvent(moEngageEventRequest);
         } catch (Exception e) {
-            log.error("Error sending HT Event to MoEngage for user " + uid);
+            log.error("Error sending HT Event to MoEngage for user {} ", uid);
         }
     }
 }

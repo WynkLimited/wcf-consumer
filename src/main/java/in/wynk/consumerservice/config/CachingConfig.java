@@ -41,18 +41,11 @@ public class CachingConfig {
         ArrayList<RedisHostConfig> redisHosts = new ArrayList<RedisHostConfig>();
         String[] hostsConfig = redisHostsConfig.split(",");
         for (String hostConfig : hostsConfig) {
-            String[] split = hostConfig.split(":");
-            if (split.length > 1) {
+            String[] hostAndPort = hostConfig.split(":");
+            if (hostAndPort.length > 1) {
                 RedisHostConfig redisHostConfig = new RedisHostConfig();
-                redisHostConfig.setRedisHost(split[0]);
-                String portPassword = split[1];
-                String[] split2 = portPassword.split("/");
-                if (split2.length > 1) {
-                    redisHostConfig.setRedisPort(Integer.parseInt(split2[0]));
-                    redisHostConfig.setRedisPassword(split2[1]);
-                } else {
-                    redisHostConfig.setRedisPort(Integer.parseInt(split[1]));
-                }
+                redisHostConfig.setRedisHost(hostAndPort[0]);
+                redisHostConfig.setRedisPort(Integer.parseInt(hostAndPort[1]));
                 if (StringUtils.isNotBlank(redisPassword)) {
                     redisHostConfig.setRedisPassword(redisPassword);
                 }
