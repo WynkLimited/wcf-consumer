@@ -1,5 +1,7 @@
 package in.wynk.consumerservice.service;
 
+import com.github.annotation.analytic.core.annotations.AnalyseTransaction;
+import com.github.annotation.analytic.core.service.AnalyticService;
 import in.wynk.consumerservice.constants.EventTypes;
 import in.wynk.consumerservice.constants.MoEngageEventNames;
 import in.wynk.consumerservice.dao.UserDao;
@@ -13,6 +15,7 @@ import in.wynk.consumerservice.utils.AppUtils;
 import in.wynk.consumerservice.utils.WcfUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -44,8 +47,12 @@ public class WcfCallbackService {
     @Autowired
     private WcfUtils wcfUtils;
 
+    @AnalyseTransaction(name = "wcfCallback")
     public String handleCallback(SubscriptionEvent subscriptionEvent) {
         log.info("Calback recieved for uid {}, event {}", subscriptionEvent.getUid(), subscriptionEvent.getEvent());
+        AnalyticService.update("uid", subscriptionEvent.getUid());
+        AnalyticService.update("event", subscriptionEvent.getEvent());
+        MDC.put("uid", subscriptionEvent.getUid());
 
         if(StringUtils.isAnyBlank(subscriptionEvent.getEvent(), subscriptionEvent.getUid())) {
             log.info("Event or uid is missing in event");
