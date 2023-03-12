@@ -6,8 +6,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.reflect.TypeToken;
 import in.wynk.consumerservice.utils.AppUtils;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -23,7 +25,11 @@ import java.util.Set;
 @Document(collection = "users")
 @Builder
 @Data
+@AllArgsConstructor
 public class User extends BaseEntity{
+    private User(){
+        //used in deserialization from cached value in redis caching
+    };
 
     @Field(MongoUserEntityKey.uid)
     @JsonProperty(MongoUserEntityKey.uid)

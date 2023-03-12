@@ -28,6 +28,9 @@
 		<annotation.analytic.version>0.0.1</annotation.analytic.version>
 		<spring.cloud.aws.version>2.2.6.RELEASE</spring.cloud.aws.version>
 		<spring.cloud.bootstrap.version>3.0.3</spring.cloud.bootstrap.version>
+		<aspectj.version>1.8.13</aspectj.version>
+		<aspectj.runtime.version>1.8.8</aspectj.runtime.version>
+		<codehaus.aspectj.plugin.version>1.8</codehaus.aspectj.plugin.version>
 
 	</properties>
 	<repositories>
@@ -55,6 +58,12 @@
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -135,6 +144,15 @@
 			<version>${spring.cloud.bootstrap.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>3.0.4.RELEASE</version>
+		</dependency>
+
+
+
+
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
@@ -150,44 +168,67 @@
 
 	<build>
 		<plugins>
-			<!--<plugin>
+			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>1.11</version>
+				<version>${codehaus.aspectj.plugin.version}</version>
 				<executions>
 					<execution>
+						<id>compile-with-aspectj</id>
+						<phase>process-classes</phase>
 						<goals>
 							<goal>compile</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>test-compile-with-aspectj</id>
+						<phase>process-classes</phase>
+						<goals>
 							<goal>test-compile</goal>
 						</goals>
 					</execution>
 				</executions>
 				<configuration>
-					<source>${maven.compiler.target}</source>
-					<target>${maven.compiler.target}</target>
-					<complianceLevel>${maven.compiler.target}</complianceLevel>
-					<aspectDirectory>${project.build.sourceDirectory}/src/main/java</aspectDirectory>
-					<showWeaveInfo>true</showWeaveInfo>
+					<complianceLevel>${java.version}</complianceLevel>
+					<includes>
+						<include>**/*.java</include>
+						<include>**/*.aj</include>
+					</includes>
+					<aspectDirectory>src</aspectDirectory>
+					<!--<showWeaveInfo>false</showWeaveInfo>-->
+					<showWeaveInfo/>
+					<forceAjcCompile>true</forceAjcCompile>
+					<sources/>
+					<weaveDirectories>
+						<weaveDirectory>${project.build.directory}/classes</weaveDirectory>
+					</weaveDirectories>
 					<aspectLibraries>
 						<aspectLibrary>
 							<groupId>com.github</groupId>
 							<artifactId>annotation-analytic-core</artifactId>
 						</aspectLibrary>
+						<aspectLibrary>
+							<groupId>org.springframework</groupId>
+							<artifactId>spring-aspects</artifactId>
+						</aspectLibrary>
 					</aspectLibraries>
 				</configuration>
-			</plugin>-->
+				<dependencies>
+					<dependency>
+						<groupId>org.aspectj</groupId>
+						<artifactId>aspectjrt</artifactId>
+						<version>${aspectj.runtime.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.aspectj</groupId>
+						<artifactId>aspectjtools</artifactId>
+						<version>${aspectj.runtime.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<mainClass>in.wynk.consumerservice.ConsumerServiceApplication</mainClass>
-						<!--<excludes>
-							<exclude>
-								<groupId>org.projectlombok</groupId>
-								<artifactId>lombok</artifactId>
-							</exclude>
-						</excludes>-->
-				</configuration>
 				<executions>
 					<execution>
 						<goals>
