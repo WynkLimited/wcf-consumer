@@ -26,6 +26,9 @@
 		<httpclient5.version>5.1.4</httpclient5.version>
 		<redis.client.version>3.1.0</redis.client.version>
 		<annotation.analytic.version>0.0.1</annotation.analytic.version>
+		<spring.cloud.aws.version>2.2.6.RELEASE</spring.cloud.aws.version>
+		<spring.cloud.bootstrap.version>3.0.3</spring.cloud.bootstrap.version>
+
 	</properties>
 	<repositories>
 		<repository>
@@ -123,37 +126,14 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-aws-secrets-manager-config</artifactId>
-			<version>2.2.6.RELEASE</version>
+			<version>${spring.cloud.aws.version}</version>
 		</dependency>
-		<!--<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter</artifactId>
-			<version>3.1.6</version>
-		</dependency>-->
-		<!--<dependency>
+
+		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-bootstrap</artifactId>
-			<version>3.0.4</version>
-		</dependency>-->
-		<!--<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-config</artifactId>
-			<version>3.1.6</version>
+			<version>${spring.cloud.bootstrap.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter</artifactId>
-			<version>3.1.6</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-autoconfigure</artifactId>
-			<version>2.7.6</version>
-		</dependency>-->
-
-
-
 
 	</dependencies>
 	<dependencyManagement>

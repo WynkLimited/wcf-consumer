@@ -1,8 +1,9 @@
 aws:
   secretsmanager:
-    name: credentials
-    prefix: /whitelabel
+    name: wcf-consumer
+    prefix: wynk
     enabled: true
     region: ap-south-1
-    default-context: credentials
+    default-context: wcf-consumer
     fail-fast: false
+    profileSeparator: /

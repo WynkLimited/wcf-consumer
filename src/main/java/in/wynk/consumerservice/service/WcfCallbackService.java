@@ -17,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +48,12 @@ public class WcfCallbackService {
 
     @Autowired
     private WcfUtils wcfUtils;
+
+    @Autowired
+    private Environment env;
+
+    @Value("${wynk/wcf-consumer/staging}")
+    private String scyllaPassword;
 
     @AnalyseTransaction(name = "wcfCallback")
     public String handleCallback(SubscriptionEvent subscriptionEvent) {
