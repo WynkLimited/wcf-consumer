@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
 @Aspect
 public class TimeItAspect {
 
-    @Around(value = "execution(@in.wynk.lib.analytics.TimeIt * *.*(..))")
+    @Around(value = "execution(@in.wynk.consumerservice.annotation.TimeIt * *.*(..))")
     public Object timeIt(ProceedingJoinPoint pjp) throws Throwable {
         long startTime = System.currentTimeMillis();
         MethodSignature methodSignature = (MethodSignature) pjp.getStaticPart().getSignature();
