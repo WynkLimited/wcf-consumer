@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="true" scanPeriod="30 seconds">
+    <timestamp key="_timestamp" datePattern="yyyy-MM-dd"/>
+    <property resource="application-${PROFILE}.properties"/>
+    <property name = "service.name" value = "wcf-consumer"/>
+    <!--<contextListener class="com.ofpay.logback.TtlMdcListener"/>-->
+    <appender name="ERRORLOG"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%level %date [%thread] [%X{rid}] [%X{uid}] [%file:%line] %msg%n</Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/data/logs/music/${service.name}/error/%d{yyyy-MM-dd, aux}/${service.name}-error.${hostname}.%d{yyyy-MM-dd-HH}.log.gz
+            </fileNamePattern>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+    </appender>
+    <appender name="ASYNC_ERRORLOG"
+              class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="ERRORLOG"/>
+        <queueSize>10000</queueSize>
+        <neverBlock>true</neverBlock>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <appender name="FILE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%level %date [%thread] [%X{rid}] [%X{uid}] [%file:%line] %msg%n</Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/data/logs/music/${service.name}/app/%d{yyyy-MM-dd, aux}/${service.name}.${hostname}.%d{yyyy-MM-dd-HH}_%i.log.gz
+            </fileNamePattern>
+            <maxHistory>240</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>1GB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+    <appender name="ASYNC_FILE"
+              class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE"/>
+        <queueSize>10000</queueSize>
+        <neverBlock>true</neverBlock>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+
+    <!-- logstashLogs -->
+    <appender name="ANALYTIC_LOG_FILE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%msg%n</Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/data/logs/music/${service.name}/logstash/%d{yyyy-MM-dd, aux}/${service.name}-logstashLogs.${hostname}.%d{yyyy-MM-dd-HH}.log.gz
+            </fileNamePattern>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- transactionLogs-->
+    <appender name="TRANSACTION_LOG_FILE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%msg%n</Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/data/logs/music/${service.name}/logstash/%d{yyyy-MM-dd, aux}/${service.name}-transactionLogs.${hostname}.%d{yyyy-MM-dd-HH}.log.gz
+            </fileNamePattern>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="ASYNC_ANALYTIC_LOG_FILE"
+              class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="ANALYTIC_LOG_FILE"/>
+        <queueSize>10000</queueSize>
+        <neverBlock>true</neverBlock>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+
+    <appender name="ASYNC_TRANSACTION_LOG_FILE"
+              class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="TRANSACTION_LOG_FILE"/>
+        <queueSize>10000</queueSize>
+        <neverBlock>true</neverBlock>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>.%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %n
+            </Pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>TRACE</level>
+        </filter>
+    </appender>
+
+    <logger name="wcfCallback" additivity="false" level="INFO">
+        <appender-ref ref="ASYNC_ANALYTIC_LOG_FILE"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="ASYNC_FILE"/>
+        <appender-ref ref="ASYNC_ERRORLOG"/>
+        <appender-ref ref="consoleAppender"/>
+    </root>
+
+</configuration>

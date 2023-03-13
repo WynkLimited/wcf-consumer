@@ -1,0 +1,9 @@
+aws:
+  secretsmanager:
+    name: wcf-consumer
+    prefix: wynk
+    enabled: true
+    region: ap-south-1
+    default-context: wcf-consumer
+    fail-fast: false
+    profileSeparator: /
