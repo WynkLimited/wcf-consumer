@@ -99,7 +99,8 @@ public class WcfCallbackService {
         } catch (Exception e) {
             userSubscription = wcfUtils.getUpdatedSubscriptionObject(user,subscriptionEvent);
         }
-        paramValues.put(User.MongoUserEntityKey.newSubscription, AppUtils.writeValueAsString(userSubscription));
+
+        paramValues.put(User.MongoUserEntityKey.newSubscription, userSubscription);
         userService.updateUser(uid, paramValues);
 
         try {

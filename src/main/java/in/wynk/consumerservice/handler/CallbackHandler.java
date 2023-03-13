@@ -21,8 +21,6 @@ public class CallbackHandler {
     @PostMapping
     public ResponseEntity<String> handleCallback(@RequestBody SubscriptionEvent subscriptionEvent) {
         try {
-            cahCachingService.evictCache();;
-            cahCachingService.loadAllPlans();
             callbackService.handleCallback(subscriptionEvent);
             return ResponseEntity.ok("success");
         } catch (Exception e) {

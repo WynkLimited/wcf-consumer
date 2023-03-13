@@ -136,7 +136,7 @@ public class WcfUtils {
             }
         }
         wcfSubscription.setProdIds(updatedProductsList);
-        wcfSubscription.setOfferTS(0L);
+        wcfSubscription.setOfferTS(System.currentTimeMillis());
         return wcfSubscription;
     }
 
